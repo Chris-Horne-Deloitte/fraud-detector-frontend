@@ -1,14 +1,19 @@
 // src/App.js
-import React from 'react';
-import FraudDetectorForm from './components/FraudDetectorForm';
+import React, { useState } from 'react';
+import Login from './Login';
 
 const App = () => {
-    return (
-        <div className="App">
-            <h1>Fraud Detector</h1>
-            <FraudDetectorForm />
-        </div>
-    );
+  const [token, setToken] = useState(null);
+
+  const handleLogin = (token) => {
+    setToken(token);
+  };
+
+  return (
+    <div>
+      {!token ? <Login onLogin={handleLogin} /> : <div>Welcome!</div>}
+    </div>
+  );
 };
 
 export default App;
