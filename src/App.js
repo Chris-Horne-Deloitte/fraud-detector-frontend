@@ -1,17 +1,17 @@
-// src/App.js
 import React, { useState } from 'react';
 import Login from './Login';
+import FraudResultsTable from './components/FraudResultsTable';
 
 const App = () => {
-  const [token, setToken] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = (token) => {
-    setToken(token);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
   };
 
   return (
     <div>
-      {!token ? <Login onLogin={handleLogin} /> : <div>Welcome!</div>}
+      {!isLoggedIn ? <Login onLogin={handleLogin} /> : <FraudResultsTable />}
     </div>
   );
 };
