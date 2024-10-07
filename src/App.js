@@ -1,18 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Login from './Login';
-import FraudResultsTable from './components/FraudResultsTable';
+import FraudResultsTable from './FraudResultsTable'; // Import the component
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
   return (
-    <div>
-      {!isLoggedIn ? <Login onLogin={handleLogin} /> : <FraudResultsTable />}
-    </div>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/dashboard" element={<FraudResultsTable />} /> {/* Define the route */}
+    </Routes>
   );
 };
 

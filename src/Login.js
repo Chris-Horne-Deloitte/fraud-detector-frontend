@@ -1,10 +1,12 @@
-import { TextField, Button, Container, Typography, Box, Snackbar } from '@mui/material';
+import { TextField, Button, Container, Typography, Box } from '@mui/material';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,7 +16,7 @@ const Login = ({ onLogin }) => {
     }
     setLoading(true);
     try {
-      const response = await fetch(process.env.REACT_APP_API_ENDPOINT, {
+      const response = await fetch('http://localhost:5000/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,33 +30,14 @@ const Login = ({ onLogin }) => {
 
       const data = await response.json();
       if (data.success) {
-        onLogin(); // Call the onLogin function to update the login state
+        onLogin();
+        navigate('/dashboard');
       } else {
-        // Use MUI Snackbar for user-friendly notifications
-        const handleSnackbarClose = () => {
-          // Handle Snackbar close event
-        };
-
-        <Snackbar
-          open={true} // Set open state based on condition
-          autoHideDuration={6000} // Set duration for Snackbar display
-          onClose={handleSnackbarClose}
-          message="Login failed: Invalid credentials"
-        />
+        alert("Login failed: Invalid credentials");
       }
     } catch (error) {
       console.error('Error during login:', error);
-      // Use MUI Snackbar for user-friendly notifications
-      const handleSnackbarClose = () => {
-        // Handle Snackbar close event
-      };
-
-      <Snackbar
-        open={true} // Set open state based on condition
-        autoHideDuration={6000} // Set duration for Snackbar display
-        onClose={handleSnackbarClose}
-        message="Login failed: An error occurred"
-      />
+      alert("Login failed: An error occurred");
     } finally {
       setLoading(false);
     }

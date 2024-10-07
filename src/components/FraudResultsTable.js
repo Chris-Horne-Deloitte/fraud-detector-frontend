@@ -1,51 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 const FraudResultsTable = () => {
   const [fraudResults, setFraudResults] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await fetch('/api/data');
-      const data = await response.json();
-      if (data.success) {
-        setFraudResults(data.data);
-      } else {
-        console.error('Failed to fetch data');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/fraud-results');
+        const data = await response.json();
+        if (data.success) {
+          setFraudResults(data.data);
+        } else {
+          console.error('Failed to fetch data');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+    };
 
-  fetchData();
-}, []);
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {/* Replace with your actual column names */}
-            <TableCell>ID</TableCell>
-            <TableCell>Column1</TableCell>
-            <TableCell>Column2</TableCell>
-            {/* Add more columns as needed */}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {fraudResults.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.column1}</TableCell>
-              <TableCell>{row.column2}</TableCell>
-              {/* Add more cells as needed */}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Result</th>
+          {/* Add more columns as needed */}
+        </tr>
+      </thead>
+      <tbody>
+        {fraudResults.map((result) => (
+          <tr key={result.id}>
+            <td>{result.id}</td>
+            <td>{result.result}</td>
+            {/* Add more cells as needed */}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
