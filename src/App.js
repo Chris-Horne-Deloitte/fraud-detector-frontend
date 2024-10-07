@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './Login';
-import FraudResultsTable from './FraudResultsTable'; // Import the component
+import FraudResultsTable from './components/FraudResultsTable'; // Import the component
 
 const App = () => {
   return (
