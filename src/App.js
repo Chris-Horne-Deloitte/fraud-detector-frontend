@@ -1,15 +1,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Login from './Login';
-import FraudResultsTable from './components/FraudResultsTable'; // Import the component
+import Login from './Login.js';
+import FraudResultsTable from './components/FraudResultsTable.js';
 
-const App = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/dashboard" element={<FraudResultsTable />} /> Define the route
-    </Routes>
-  );
-};
+const App = () => (
+  <Routes>
+    <Route path="/" element={<Login />} />
+    <Route path="/dashboard" element={<FraudResultsTable />} />
+  </Routes>
+);
 
 export default App;

@@ -1,48 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 
 const FraudResultsTable = () => {
-  const [fraudResults, setFraudResults] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({});
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`https://${process.env.REACT_APP_DB_HOST}:${process.env.REACT_APP_DB_PORT}/${process.env.REACT_APP_DB_NAME}/${process.env.REACT_APP_DB_USER}?password=${process.env.REACT_APP_DB_PASSWORD}`);
+      const result = await response.json();
+      setData(result.rows);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/fraud_results');
-        const data = await response.json();
-        if (data.success) {
-          setFraudResults(data.data);
-        } else {
-          console.error('Failed to fetch data');
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (!data.length) return <div>Loading...</div>;
+
+  const columnHeaders = Object.keys(data[0]);
+  const tableRows = data.map((row) => columnHeaders.map((column) => row[column]));
 
   return (
     <table>
+      <caption>Fraud Results Table</caption>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Result</th>
-          {/* Add more columns as needed */}
+          {columnHeaders.map((column, index) => (
+            <th key={index} style={{ fontSize: 18, fontWeight: 'bold' }}>
+              {column}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
-        {fraudResults.map((result) => (
-          <tr key={result.id}>
-            <td>{result.id}</td>
-            <td>{result.result}</td>
-            {/* Add more cells as needed */}
+        {tableRows.map((row, index) => (
+          <tr key={index}>
+            {row.map((cell, cellIndex) => (
+              <td
+                key={cellIndex}
+                style={{
+                  fontSize: 16,
+                  padding: 10,
+                  textAlign: cellIndex === 0 ? 'left' : 'right',
+                }}
+              >
+                {cell}
+              </td>
+            ))}
           </tr>
         ))}
       </tbody>
