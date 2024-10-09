@@ -1,0 +1,22 @@
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f0f0f0;
+}
+
+.key {
+  font-weight: bold;
+}
+
+.value {
+  word-break: break-all;
+}
