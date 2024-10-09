@@ -1,54 +1,43 @@
 import React, { useState, useEffect } from 'react';
 
-
 const FraudResultsTable = () => {
-  const [data, setData] = useState({});
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`https://${process.env.REACT_APP_DB_HOST}:${process.env.REACT_APP_DB_PORT}/${process.env.REACT_APP_DB_NAME}/${process.env.REACT_APP_DB_USER}?password=${process.env.REACT_APP_DB_PASSWORD}`);
-      const result = await response.json();
-      setData(result.rows);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const [data, setData] = useState([]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/data');
+        if (!response.ok) {
+          console.error('Error:', response.status, response.statusText);
+          throw new Error('Failed to fetch data');
+        }
+        const result = await response.json();
+        if (!Array.isArray(result)) {
+          console.error('Error: Invalid data format');
+          throw new Error('Invalid data format');
+        }
+        setData(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
     fetchData();
   }, []);
 
-  if (!data.length) return <div>Loading...</div>;
-
-  const columnHeaders = Object.keys(data[0]);
-  const tableRows = data.map((row) => columnHeaders.map((column) => row[column]));
-
   return (
     <table>
-      <caption>Fraud Results Table</caption>
       <thead>
         <tr>
-          {columnHeaders.map((column, index) => (
-            <th key={index} style={{ fontSize: 18, fontWeight: 'bold' }}>
-              {column}
-            </th>
-          ))}
+          <th>Header 1</th>
+          <th>Header 2</th>
         </tr>
       </thead>
       <tbody>
-        {tableRows.map((row, index) => (
+        {data.map((row, index) => (
           <tr key={index}>
-            {row.map((cell, cellIndex) => (
-              <td
-                key={cellIndex}
-                style={{
-                  fontSize: 16,
-                  padding: 10,
-                  textAlign: cellIndex === 0 ? 'left' : 'right',
-                }}
-              >
-                {cell}
-              </td>
+            {Object.keys(row).map((key, cellIndex) => (
+              <td key={cellIndex}>{JSON.stringify(row[key])}</td>
             ))}
           </tr>
         ))}
