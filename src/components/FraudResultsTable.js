@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { FraudDetector } from '@aws-sdk/client-fraud-detector';
+
+const fraudDetector = new FraudDetector({ region: 'us-east-1' });
 
 const FraudResultsTable = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getFraudResults = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/data');
-        if (!response.ok) {
-          console.error('Error:', response.status, response.statusText);
-          throw new Error('Failed to fetch data');
-        }
-        const result = await response.json();
-        if (!Array.isArray(result)) {
-          console.error('Error: Invalid data format');
-          throw new Error('Invalid data format');
-        }
-        setData(result);
+        const result = await fraudDetector.getEventPrediction({
+          detectorId: 'sample_fraud_detection_model',
+          eventId: 'event_id',
+          eventTypeName: 'event_type_name',
+        }).promise();
+
+        const prediction = result.prediction;
+        // Process the prediction results
+        setData(prediction);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
-    fetchData();
+    getFraudResults();
   }, []);
 
   return (
