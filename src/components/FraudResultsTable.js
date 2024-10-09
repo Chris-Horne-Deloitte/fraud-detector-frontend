@@ -7,7 +7,7 @@ const FraudResultsTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/fraud-results');
+        const response = await fetch('http://localhost:3000/api/fraud_results');
         const data = await response.json();
         if (data.success) {
           setFraudResults(data.data);
